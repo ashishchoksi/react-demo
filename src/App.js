@@ -2,6 +2,7 @@ import './App.css';
 import Person from './Person/Person'
 import React, { Component } from "react";
 import DropDownWithChage from './DropDown/DropDownWithChange';
+import DropDownWithoutChange from './DropDown/DropDown';
 
 class App extends Component {
 
@@ -13,11 +14,13 @@ class App extends Component {
       { id: 'ab3', name: "Maxmilian", age: 30 }
     ],
     isVisible: false,
-    my_states: ['Gujarat', 'Maharastra', 'Panjab'],
+    my_states: ['Gujarat', 'Maharastra', 'Panjab', 'Karnataka'],
     selectedState: 'Select one',
     my_city: [
       { "Gujarat": ['Surat', 'Ahmedabad'] },
-      { "Maharastra": ['Mumbai'] }
+      { "Maharastra": ['Mumbai'] },
+      { "Panjab": ['Amritsar'] },
+      { "Karnataka": ['Banglore'] }
     ],
     currentCity: []
   };
@@ -74,10 +77,25 @@ class App extends Component {
   }
 
   chnageState = (e) => {
-    alert(e.target.value);
+    let val = e.target.value;
+    alert(val);
+    if (val !== 'Select') {
+      this.setState({ selectedState: val });
+      this.setState({ currentCity: this.state.my_city[this.state.my_states.indexOf(e.target.value)][[e.target.value]] }
+        , () => { console.log(this.state.currentCity) });
+    } else {
+      this.setState({ selectedState: '' });
+      this.setState({ currentCity: [] });
+    }
+
   }
 
   render() {
+
+    let city = null;
+    if (this.state.currentCity.length !== 0) {
+      city = <DropDownWithoutChange data={this.state.currentCity} />
+    }
 
     let person = null;
 
@@ -102,7 +120,9 @@ class App extends Component {
         {person}
 
         <br />
-        <DropDownWithChage changed={this.chnageState} data={['Gujarat', 'Maharastra', 'Panjab']} />
+        <DropDownWithChage changed={this.chnageState} data={this.state.my_states} />
+        <br />
+        {city}
       </div>
     );
   };
